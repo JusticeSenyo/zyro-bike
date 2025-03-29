@@ -11,7 +11,9 @@ const inter = Inter({ subsets: ["latin"] })
 export const metadata: Metadata = {
   title: "Zyro Bike - Campus Bike-Sharing Service",
   description: "Eco-friendly bike-sharing service for campus mobility",
-    generator: 'v0.dev'
+  icons: {
+    icon : "/favicon.ico",
+  }
 }
 
 export default function RootLayout({
