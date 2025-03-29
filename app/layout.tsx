@@ -9,7 +9,7 @@ import Footer from "@/components/footer"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Zyro Bike - Campus Bike-Sharing Service",
+  title: "Zyr Bike - Campus Bike-Sharing Service",
   description: "Eco-friendly bike-sharing service for campus mobility",
   icons: {
     icon : "/favicon.ico",
