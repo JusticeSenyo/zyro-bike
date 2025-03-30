@@ -23,7 +23,7 @@ export default function AboutPage() {
       name: "Senyo Justice",
       role: "Frontend Developer",
       bio: "Implements the user interface designs and ensures responsive behavior.",
-      avatar: "justice.png",
+      avatar: "justice.jpg",
     },
     {
       id: 4,
