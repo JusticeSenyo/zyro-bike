@@ -44,7 +44,7 @@ export default function AboutPage() {
       name: "Richmond Vitashie",
       role: "QA Engineer",
       bio: "Tests all components to ensure quality and reliability.",
-      avatar: "/placeholder.svg?height=100&width=100",
+      avatar: "richie.jpg",
     },
     {
       id: 7,
