@@ -9,7 +9,7 @@ export default function AboutPage() {
       name: "Joel Brian",
       role: "Project Lead",
       bio: "Oversees the entire project and ensures all components work together seamlessly.",
-      avatar: "/placeholder.svg?height=100&width=100",
+      avatar: "joel.jpg",
     },
     {
       id: 2,
@@ -37,11 +37,11 @@ export default function AboutPage() {
       name: "Gbologah Prince",
       role: "Mobile Developer",
       bio: "Creates the mobile application for Android and iOS platforms.",
-      avatar: "/placeholder.svg?height=100&width=100",
+      avatar: "george.jpg",
     },
     {
       id: 6,
-      name: "Efua Mensah",
+      name: "Richmond Vitashie",
       role: "QA Engineer",
       bio: "Tests all components to ensure quality and reliability.",
       avatar: "/placeholder.svg?height=100&width=100",
@@ -65,15 +65,23 @@ export default function AboutPage() {
       name: "Tetteh Denis",
       role: "Security Specialist",
       bio: "Ensures the application is secure and user data is protected.",
-      avatar: "/placeholder.svg?height=100&width=100",
+      avatar: "tetteh.jpg",
     },
     {
       id: 10,
-      name: "Richmond Vitashie",
-      role: "Content Writer",
-      bio: "Creates all written content for the application and marketing materials.",
-      avatar: "/placeholder.svg?height=100&width=100",
+      name: "Kumah Henry",
+      role: "unknown for now",
+      bio: "ago fill am later",
+      avatar: "kumah.jpg",
     },
+    {
+      id: 11,
+      name: "Michael Dzomeku",
+      role: "another Content Writer",
+      bio: "also Creates all written content for the application and marketing materials.",
+      avatar: "michael.jpg",
+    },
+
 
   ]
 
