@@ -74,13 +74,13 @@ export default function AboutPage() {
       bio: "ago fill am later",
       avatar: "kumah.jpg",
     },
-    {
-      id: 11,
-      name: "Michael Dzomeku",
-      role: "another Content Writer",
-      bio: "also Creates all written content for the application and marketing materials.",
-      avatar: "michael.jpg",
-    },
+    // {
+    //   id: 11,
+    //   name: "Michael Dzomeku",
+    //   role: "another Content Writer",
+    //   bio: "also Creates all written content for the application and marketing materials.",
+    //   avatar: "michael.jpg",
+    // },
 
 
   ]
