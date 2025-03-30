@@ -3,6 +3,14 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Bike, Leaf, Clock, Users, Shield } from "lucide-react"
 
 export default function AboutPage() {
+    const logoStyle = {
+    "height":"60px",
+    "width":"60px",
+    "padding": "none",
+    "margin": "0",
+    "border-radius": "100%",
+    "background-size": "cover",
+  }
   const teamMembers = [
     {
       id: 1,
@@ -195,7 +203,7 @@ export default function AboutPage() {
           <div className="flex flex-col items-center justify-center space-y-4 text-center mb-10">
             <div className="inline-flex items-center justify-center p-2 bg-background rounded-full">
               {/* <Bike className="h-6 w-6 text-primary" /> */}
-              <img  src="Logo.png" alt="" />
+              <img style={logostyle} src="Logo.png" alt="" />
             </div>
             <div className="space-y-2">
               <h2 className="text-2xl font-bold tracking-tighter md:text-3xl">Meet Our Team</h2>
