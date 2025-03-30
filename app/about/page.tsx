@@ -30,7 +30,7 @@ export default function AboutPage() {
       name: "Amenu David Delali",
       role: "Backend Developer",
       bio: "Develops the server-side logic and database architecture.",
-      avatar: "/placeholder.svg?height=100&width=100",
+      avatar: "dela.jpg",
     },
     {
       id: 5,
