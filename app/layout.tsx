@@ -9,11 +9,15 @@ import Footer from "@/components/footer"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Zyr Bike - Campus Bike-Sharing Service",
+  title: "Zyro Bike - Campus Bike-Sharing Service",
   description: "Eco-friendly bike-sharing service for campus mobility",
   icons: {
-    icon : "/favicon.ico",
-  }
+    icon: [
+      { url: "/favicon.ico", sizes: "32x32" },
+      { url: "/icon.png", sizes: "192x192" },
+    ],
+    apple: [{ url: "/apple-icon.png", sizes: "180x180" }],
+  },
 }
 
 export default function RootLayout({
