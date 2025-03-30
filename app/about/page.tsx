@@ -3,13 +3,11 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Bike, Leaf, Clock, Users, Shield } from "lucide-react"
 
 export default function AboutPage() {
-    const logoStyle = {
+    const logostyle = {
     "height":"60px",
     "width":"60px",
-    "padding": "none",
-    "margin": "0",
-    "border-radius": "100%",
-    "background-size": "cover",
+    "borderRadius": "100%",
+    "backgroundSize": "cover",
   }
   const teamMembers = [
     {

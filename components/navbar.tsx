@@ -23,8 +23,8 @@ export default function Navbar() {
     "width":"60px",
     "padding": "none",
     "margin": "0",
-    "border-radius": "100%",
-    "background-size": "cover",
+    "borderRadius": "100%",
+    "backgroundSize": "cover",
   }
   const pathname = usePathname()
   const isMobile = useMobile()

@@ -13,6 +13,12 @@ import { toast } from "@/hooks/use-toast"
 import { Bike, Eye, EyeOff } from "lucide-react"
 
 export default function LoginPage() {
+      const logoStyle = {
+    "height":"60px",
+    "width":"60px",
+    "borderRadius": "100%",
+    "backgroundSize": "cover",
+  }
   const [isLoading, setIsLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
 
@@ -83,7 +89,8 @@ export default function LoginPage() {
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1 flex flex-col items-center">
           <div className="flex items-center justify-center p-2 bg-muted rounded-full mb-2">
-            <Bike className="h-6 w-6 text-primary" />
+            {/* <Bike className="h-6 w-6 text-primary" /> */}
+            <img style={logoStyle} src="LOGO.png" alt="" />
           </div>
           <CardTitle className="text-2xl font-bold text-center">Welcome to Zyro Bike</CardTitle>
           <CardDescription className="text-center">Sign in to your account or create a new one</CardDescription>
