@@ -7,7 +7,7 @@ export default function AboutPage() {
     "height":"60px",
     "width":"60px",
     "borderRadius": "100%",
-    "backgroundSize": "cover",
+    // "backgroundSize": "cover",
   }
   const teamMembers = [
     {
