@@ -64,7 +64,7 @@ export default function AboutPage() {
       name: "Tsikatah Edem",
       role: "Database Administrator",
       bio: "Designs and maintains the database structure and performance.",
-      avatar: "/placeholder.svg?height=100&width=100",
+      avatar: "edem.jpg",
     },
     {
       id: 9,
@@ -80,13 +80,13 @@ export default function AboutPage() {
       bio: "ago fill am later",
       avatar: "kumah.jpg",
     },
-    // {
-    //   id: 11,
-    //   name: "Michael Dzomeku",
-    //   role: "another Content Writer",
-    //   bio: "also Creates all written content for the application and marketing materials.",
-    //   avatar: "michael.jpg",
-    // },
+    {
+      id: 11,
+      name: "Michael Dzomeku",
+      role: "another Content Writer",
+      bio: "also Creates all written content for the application and marketing materials.",
+      avatar: "michael.jpg",
+    },
 
 
   ]
