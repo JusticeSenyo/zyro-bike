@@ -11,14 +11,10 @@ import { Label } from "@/components/ui/label"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { toast } from "@/hooks/use-toast"
 import { Bike, Eye, EyeOff } from "lucide-react"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 
 export default function LoginPage() {
-      const logoStyle = {
-    "height":"60px",
-    "width":"60px",
-    "borderRadius": "100%",
-    "backgroundSize": "cover",
-  }
   const [isLoading, setIsLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
 
@@ -35,6 +31,11 @@ export default function LoginPage() {
     password: "",
     confirmPassword: "",
   })
+
+  const [activeTab, setActiveTab] = useState("login")
+  const [acceptedTerms, setAcceptedTerms] = useState(false)
+  const [termsDialogOpen, setTermsDialogOpen] = useState(false)
+  const [privacyDialogOpen, setPrivacyDialogOpen] = useState(false)
 
   const handleLoginChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -89,8 +90,7 @@ export default function LoginPage() {
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1 flex flex-col items-center">
           <div className="flex items-center justify-center p-2 bg-muted rounded-full mb-2">
-            {/* <Bike className="h-6 w-6 text-primary" /> */}
-            <img style={logoStyle} src="LOGO.png" alt="" />
+            <Bike className="h-6 w-6 text-primary" />
           </div>
           <CardTitle className="text-2xl font-bold text-center">Welcome to Zyro Bike</CardTitle>
           <CardDescription className="text-center">Sign in to your account or create a new one</CardDescription>
@@ -98,8 +98,12 @@ export default function LoginPage() {
         <CardContent className="p-6">
           <Tabs defaultValue="login" className="w-full">
             <TabsList className="grid w-full grid-cols-2 mb-6">
-              <TabsTrigger value="login">Login</TabsTrigger>
-              <TabsTrigger value="signup">Sign Up</TabsTrigger>
+              <TabsTrigger value="login" onClick={() => setActiveTab("login")}>
+                Login
+              </TabsTrigger>
+              <TabsTrigger value="signup" onClick={() => setActiveTab("signup")}>
+                Sign Up
+              </TabsTrigger>
             </TabsList>
             <TabsContent value="login">
               <form onSubmit={handleLoginSubmit} className="space-y-4">
@@ -268,7 +272,7 @@ export default function LoginPage() {
                     required
                   />
                 </div>
-                <Button type="submit" className="w-full" disabled={isLoading}>
+                <Button type="submit" className="w-full" disabled={isLoading || !acceptedTerms}>
                   {isLoading ? (
                     <span className="flex items-center gap-1">
                       <svg
@@ -302,19 +306,199 @@ export default function LoginPage() {
           </Tabs>
         </CardContent>
         <CardFooter className="flex flex-col space-y-4 px-6 pb-6 pt-0">
-          <div className="text-xs text-center text-muted-foreground">
-            By continuing, you agree to our{" "}
-            <Link href="#" className="text-primary hover:underline">
-              Terms of Service
-            </Link>{" "}
-            and{" "}
-            <Link href="#" className="text-primary hover:underline">
-              Privacy Policy
-            </Link>
-            .
-          </div>
+          {activeTab === "signup" && (
+            <div className="flex items-start space-x-2 text-sm">
+              <Checkbox id="terms" checked={acceptedTerms} onCheckedChange={setAcceptedTerms} className="mt-1" />
+              <div>
+                <label htmlFor="terms" className="text-sm text-muted-foreground">
+                  By continuing, you agree to our{" "}
+                  <Button
+                    variant="link"
+                    className="h-auto p-0 text-primary hover:underline"
+                    onClick={() => setTermsDialogOpen(true)}
+                  >
+                    Terms of Service
+                  </Button>{" "}
+                  and{" "}
+                  <Button
+                    variant="link"
+                    className="h-auto p-0 text-primary hover:underline"
+                    onClick={() => setPrivacyDialogOpen(true)}
+                  >
+                    Privacy Policy
+                  </Button>
+                  .
+                </label>
+              </div>
+            </div>
+          )}
+          {activeTab === "login" && (
+            <div className="text-xs text-center text-muted-foreground">
+              By continuing, you agree to our{" "}
+              <Button
+                variant="link"
+                className="h-auto p-0 text-xs text-primary hover:underline"
+                onClick={() => setTermsDialogOpen(true)}
+              >
+                Terms of Service
+              </Button>{" "}
+              and{" "}
+              <Button
+                variant="link"
+                className="h-auto p-0 text-xs text-primary hover:underline"
+                onClick={() => setPrivacyDialogOpen(true)}
+              >
+                Privacy Policy
+              </Button>
+              .
+            </div>
+          )}
         </CardFooter>
       </Card>
+
+      {/* Terms and Conditions Dialog */}
+      <Dialog open={termsDialogOpen} onOpenChange={setTermsDialogOpen}>
+        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Terms & Conditions for Campus Bike-Sharing Service</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4 text-sm">
+            <p className="font-medium">Effective Date: April 1, 2025</p>
+
+            <p>
+              Welcome to Zyro Bike, a campus bike-sharing service. By using our bikes, you agree to the following Terms
+              & Conditions. Please read them carefully.
+            </p>
+
+            <div>
+              <h3 className="text-lg font-bold mb-2">1. General Terms</h3>
+              <ul className="list-disc pl-5 space-y-1">
+                <li>
+                  You must be at least 18 years old (or the age requirement set by your institution) to use our service.
+                </li>
+                <li>You agree to comply with campus traffic laws and safety regulations.</li>
+                <li>
+                  The company reserves the right to update these terms at any time, and continued use of our service
+                  means acceptance of the updated terms.
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-bold mb-2">2. User Accounts & Subscriptions</h3>
+              <ul className="list-disc pl-5 space-y-1">
+                <li>To access our bikes, you must create an account and provide accurate information.</li>
+                <li>
+                  Subscription fees must be paid in advance and are non-refundable, except as specified in our refund
+                  policy.
+                </li>
+                <li>Your account is personal and may not be shared with others.</li>
+                <li>
+                  We reserve the right to suspend or terminate accounts for rule violations or suspicious activities.
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-bold mb-2">3. Bike Usage Rules</h3>
+              <ul className="list-disc pl-5 space-y-1">
+                <li>Bikes are for on-campus movement only.</li>
+                <li>Users must properly park bikes in designated areas after use.</li>
+                <li>
+                  It is prohibited to:
+                  <ul className="list-disc pl-5 mt-1">
+                    <li>Modify or tamper with bikes.</li>
+                    <li>Ride recklessly or engage in dangerous behavior.</li>
+                    <li>Allow another person to use the bike under your account.</li>
+                  </ul>
+                </li>
+                <li>If a bike is not returned properly, additional fees may apply.</li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-bold mb-2">4. Payments & Penalties</h3>
+              <ul className="list-disc pl-5 space-y-1">
+                <li>All applicable fees must be paid before use.</li>
+                <li>A late return fee may be charged if a bike is not returned within the allowed time.</li>
+                <li>If a bike is damaged due to negligence, the user may be responsible for repair costs.</li>
+                <li>
+                  If a bike is lost or stolen while in your possession, you may be responsible for replacement costs.
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-bold mb-2">5. Liability & Risk</h3>
+              <ul className="list-disc pl-5 space-y-1">
+                <li>
+                  You acknowledge that riding a bike carries inherent risks, and you accept full responsibility for your
+                  safety.
+                </li>
+                <li>The company is not responsible for injuries sustained while using our bikes.</li>
+                <li>We are not liable for personal belongings lost while riding.</li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-bold mb-2">6. Data Privacy & Security</h3>
+              <ul className="list-disc pl-5 space-y-1">
+                <li>
+                  We collect and store user data (e.g., ride history, payments, GPS location) to improve service
+                  quality.
+                </li>
+                <li>
+                  Your personal data will not be shared with third parties without your consent, except for legal
+                  reasons.
+                </li>
+                <li>You are responsible for keeping your login credentials secure.</li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-bold mb-2">7. Account Termination & Violations</h3>
+              <ul className="list-disc pl-5 space-y-1">
+                <li>We reserve the right to suspend or ban users who violate these terms.</li>
+                <li>Users may request account deletion at any time.</li>
+                <li>Any outstanding fees must be paid before account closure.</li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-bold mb-2">8. Agreement to Terms</h3>
+              <p>By creating an account and using our service, you agree to these Terms & Conditions.</p>
+            </div>
+
+            <div className="pt-4 border-t">
+              <p>For any questions, contact us at info@zyrobike.com</p>
+              <p className="font-medium mt-2">Zyro Bike • www.zyrobike.com • +233 123 456 789</p>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button onClick={() => setTermsDialogOpen(false)}>Close</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Privacy Policy Dialog */}
+      <Dialog open={privacyDialogOpen} onOpenChange={setPrivacyDialogOpen}>
+        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Privacy Policy</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4 text-sm">
+            <p>
+              This is the privacy policy for Zyro Bike. It explains how we collect, use, and protect your personal
+              information.
+            </p>
+            {/* Add privacy policy content here */}
+            <p>For demonstration purposes, this is a placeholder for the privacy policy content.</p>
+          </div>
+          <DialogFooter>
+            <Button onClick={() => setPrivacyDialogOpen(false)}>Close</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
