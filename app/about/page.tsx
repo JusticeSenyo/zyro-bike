@@ -76,15 +76,15 @@ export default function AboutPage() {
     {
       id: 10,
       name: "Kumah Henry",
-      role: "unknown for now",
-      bio: "ago fill am later",
+      role: "Customer Support",
+      bio: "addressing customer inquiries, resolving complaints, processing orders, and providing information about products and services",
       avatar: "kumah.jpg",
     },
     {
       id: 11,
       name: "Michael Dzomeku",
-      role: "another Content Writer",
-      bio: "also Creates all written content for the application and marketing materials.",
+      role: "Marketing Managerr",
+      bio: "organize and manage marketing campaigns to raise awareness of and generate demand for products and services",
       avatar: "michael.jpg",
     },
 
