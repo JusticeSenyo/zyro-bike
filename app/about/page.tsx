@@ -22,7 +22,7 @@ export default function AboutPage() {
       name: "Worshie Ebenezer",
       role: "UI/UX Designer",
       bio: "Creates the user interface and ensures a smooth user experience across all devices.",
-      avatar: "/placeholder.svg?height=100&width=100",
+      avatar: "eben.jpg",
     },
     {
       id: 3,
