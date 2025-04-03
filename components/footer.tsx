@@ -61,7 +61,7 @@ export default function Footer() {
             <ul className="space-y-2">
               <li className="text-sm text-muted-foreground">Email: info@zyrobike.com</li>
               <li className="text-sm text-muted-foreground">Phone: +233 550 7475 66</li>
-              <li className="text-sm text-muted-foreground">Address: University of Proffesional Studies</li>
+              <li className="text-sm text-muted-foreground">Address: University of Professional Studies</li>
             </ul>
           </div>
           <div>

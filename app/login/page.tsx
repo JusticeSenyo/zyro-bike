@@ -15,6 +15,12 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 
 export default function LoginPage() {
+      const logostyle = {
+    "height":"60px",
+    "width":"60px",
+    "borderRadius": "100%",
+    // "backgroundSize": "cover",
+  }
   const [isLoading, setIsLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
 
@@ -90,7 +96,8 @@ export default function LoginPage() {
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1 flex flex-col items-center">
           <div className="flex items-center justify-center p-2 bg-muted rounded-full mb-2">
-            <Bike className="h-6 w-6 text-primary" />
+            {/* <Bike className="h-6 w-6 text-primary" /> */}
+            <img style={logostyle} src="LOGO.png" alt="" />
           </div>
           <CardTitle className="text-2xl font-bold text-center">Welcome to Zyro Bike</CardTitle>
           <CardDescription className="text-center">Sign in to your account or create a new one</CardDescription>
@@ -471,7 +478,7 @@ export default function LoginPage() {
 
             <div className="pt-4 border-t">
               <p>For any questions, contact us at info@zyrobike.com</p>
-              <p className="font-medium mt-2">Zyro Bike • www.zyrobike.com • +233 123 456 789</p>
+              <p className="font-medium mt-2">Zyro Bike • www.zyrobike.vercel.app • +233 550 7475 66</p>
             </div>
           </div>
           <DialogFooter>

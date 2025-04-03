@@ -37,6 +37,13 @@ import {
 } from "lucide-react"
 
 export default function ProfilePage() {
+
+        const logostyle = {
+    "height":"60px",
+    "width":"60px",
+    "borderRadius": "100%",
+    // "backgroundSize": "cover",
+  }
   // Mock user data - in a real app, this would come from an API or context
   const [userData, setUserData] = useState({
     name: "Kofi Mensah",
@@ -208,7 +215,7 @@ export default function ProfilePage() {
                   <QrCode className="h-8 w-8" />
                   <h3 className="font-medium text-center">Your Bike Access QR Code</h3>
                   <p className="text-sm text-center opacity-90">
-                    Scan this code at any Zyro Bike station to unlock your ride
+                    Scan the QR code at any Zyro Bike station to unlock your ride
                   </p>
                   <div className="bg-white p-4 rounded-lg w-full max-w-[200px] mx-auto">
                     <Image
@@ -221,7 +228,7 @@ export default function ProfilePage() {
                   </div>
                   <Button variant="secondary" size="sm" className="gap-2">
                     <Download className="h-4 w-4" />
-                    Download QR Code
+                    click to scan QR Code
                   </Button>
                 </div>
               </CardContent>
@@ -242,7 +249,8 @@ export default function ProfilePage() {
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
-                      <Bike className="h-5 w-5 text-primary" />
+                      {/* <Bike className="h-5 w-5 text-primary" /> */}
+                      <img style={logostyle} src="LOGO.png" alt="" />
                       Ride Statistics
                     </CardTitle>
                     <CardDescription>Your bike usage statistics and history</CardDescription>

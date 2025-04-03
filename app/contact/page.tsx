@@ -96,7 +96,7 @@ export default function ContactPage() {
                   <div className="space-y-1">
                     <h3 className="font-medium">Address</h3>
                     <p className="text-sm text-muted-foreground">
-                      University of Proffesional Studeis 
+                      University of Professional Studeis 
                       <br />
                       Accra
                     </p>
