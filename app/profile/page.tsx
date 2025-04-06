@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
@@ -34,16 +34,11 @@ import {
   Settings,
   Trash,
   User,
+  Camera,
+  Check,
 } from "lucide-react"
 
 export default function ProfilePage() {
-
-        const logostyle = {
-    "height":"60px",
-    "width":"60px",
-    "borderRadius": "100%",
-    // "backgroundSize": "cover",
-  }
   // Mock user data - in a real app, this would come from an API or context
   const [userData, setUserData] = useState({
     name: "Kofi Mensah",
@@ -64,26 +59,31 @@ export default function ProfilePage() {
   const [deleteConfirmation, setDeleteConfirmation] = useState("")
   const [isChangingPlan, setIsChangingPlan] = useState(false)
   const [selectedPlan, setSelectedPlan] = useState(userData.plan)
+  const [isQrScannerOpen, setIsQrScannerOpen] = useState(false)
+  const [scanning, setScanning] = useState(false)
+  const [scannedResult, setScannedResult] = useState("")
+  const videoRef = useRef(null)
+  const canvasRef = useRef(null)
 
   const plans = [
     {
       id: "daily",
       name: "Daily Pass",
-      price: "GH₵5",
+      price: "₵5",
       period: "per day",
       description: "Unlimited 30-minute rides",
     },
     {
       id: "weekly",
       name: "Weekly Pass",
-      price: "GH₵30",
+      price: "30",
       period: "per week",
       description: "Unlimited 45-minute rides",
     },
     {
       id: "monthly",
       name: "Monthly Pass",
-      price: "GH₵100",
+      price: "100",
       period: "per month",
       description: "Unlimited 60-minute rides",
     },
@@ -154,6 +154,101 @@ export default function ProfilePage() {
     return plans.find((plan) => plan.id === userData.plan) || plans[0]
   }
 
+  // QR Code Scanner Functions
+  const startScanner = async () => {
+    try {
+      const constraints = {
+        video: {
+          facingMode: "environment",
+        },
+      }
+      const stream = await navigator.mediaDevices.getUserMedia(constraints)
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream
+        videoRef.current.play()
+        setScanning(true)
+        scanQRCode()
+      }
+    } catch (err) {
+      console.error("Error accessing camera:", err)
+      toast({
+        title: "Camera Error",
+        description: "Could not access your camera. Please check permissions.",
+        variant: "destructive",
+      })
+    }
+  }
+
+  const stopScanner = () => {
+    if (videoRef.current && videoRef.current.srcObject) {
+      videoRef.current.srcObject.getTracks().forEach((track) => track.stop())
+      videoRef.current.srcObject = null
+    }
+    setScanning(false)
+  }
+
+  const scanQRCode = () => {
+    if (!scanning) return
+
+    const video = videoRef.current
+    const canvas = canvasRef.current
+
+    if (video && canvas && video.readyState === video.HAVE_ENOUGH_DATA) {
+      const context = canvas.getContext("2d")
+      canvas.height = video.videoHeight
+      canvas.width = video.videoWidth
+
+      context.drawImage(video, 0, 0, canvas.width, canvas.height)
+
+      try {
+        // This is where you would normally use a QR code detection library
+        // For this example, we'll simulate finding a QR code after a few seconds
+        setTimeout(() => {
+          if (scanning) {
+            const mockQrData = "ZYRO-BIKE-" + Math.floor(Math.random() * 1000000)
+            handleQrCodeResult(mockQrData)
+          }
+        }, 3000)
+      } catch (error) {
+        // Continue scanning if no QR code is detected
+        if (scanning) {
+          requestAnimationFrame(scanQRCode)
+        }
+      }
+    } else {
+      // Continue scanning if video is not ready
+      if (scanning) {
+        requestAnimationFrame(scanQRCode)
+      }
+    }
+  }
+
+  const handleQrCodeResult = (result) => {
+    setScannedResult(result)
+    stopScanner()
+
+    // Simulate unlocking a bike
+    toast({
+      title: "QR Code Scanned Successfully",
+      description: `Bike unlocked! Ride ID: ${result}`,
+    })
+  }
+
+  useEffect(() => {
+    // Clean up function to stop scanner when component unmounts
+    return () => {
+      if (scanning) {
+        stopScanner()
+      }
+    }
+  }, [scanning])
+
+  useEffect(() => {
+    if (isQrScannerOpen && !scanning && !scannedResult) {
+      startScanner()
+    }
+  }, [isQrScannerOpen, scanning, scannedResult])
+
   return (
     <div className="container py-10">
       <div className="flex flex-col space-y-8">
@@ -215,21 +310,27 @@ export default function ProfilePage() {
                   <QrCode className="h-8 w-8" />
                   <h3 className="font-medium text-center">Your Bike Access QR Code</h3>
                   <p className="text-sm text-center opacity-90">
-                    Scan the QR code at any Zyro Bike station to unlock your ride
+                    Scan this code at any Zyro Bike station to unlock your ride
                   </p>
                   <div className="bg-white p-4 rounded-lg w-full max-w-[200px] mx-auto">
                     <Image
-                      src="/placeholder.svg?height=200&width=200"
+                      src="scan qr.jpg"
                       alt="QR Code"
                       width={200}
                       height={200}
                       className="w-full h-auto"
                     />
                   </div>
-                  <Button variant="secondary" size="sm" className="gap-2">
-                    <Download className="h-4 w-4" />
-                    click to scan QR Code
-                  </Button>
+                  <div className="flex flex-col gap-2 w-full">
+                    {/* <Button variant="secondary" size="sm" className="gap-2">
+                      <Download className="h-4 w-4" />
+                      Download QR Code
+                    </Button> */}
+                    <Button variant="secondary" size="sm" className="gap-2" onClick={() => setIsQrScannerOpen(true)}>
+                      <Camera className="h-4 w-4" />
+                      Scan QR Code
+                    </Button>
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -249,8 +350,7 @@ export default function ProfilePage() {
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
-                      {/* <Bike className="h-5 w-5 text-primary" /> */}
-                      <img style={logostyle} src="LOGO.png" alt="" />
+                      <Bike className="h-5 w-5 text-primary" />
                       Ride Statistics
                     </CardTitle>
                     <CardDescription>Your bike usage statistics and history</CardDescription>
@@ -572,6 +672,81 @@ export default function ProfilePage() {
               Cancel
             </Button>
             <Button onClick={handleChangePlan}>Confirm Change</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* QR Code Scanner Dialog */}
+      <Dialog
+        open={isQrScannerOpen}
+        onOpenChange={(open) => {
+          setIsQrScannerOpen(open)
+          if (!open) {
+            stopScanner()
+            setScannedResult("")
+          }
+        }}
+      >
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle>Scan QR Code</DialogTitle>
+            <DialogDescription>
+              {scannedResult ? "QR code successfully scanned!" : "Position the QR code within the camera view"}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="py-4">
+            {scannedResult ? (
+              <div className="space-y-4 text-center">
+                <div className="mx-auto w-16 h-16 rounded-full bg-green-100 flex items-center justify-center dark:bg-green-900/20">
+                  <Check className="h-8 w-8 text-green-600 dark:text-green-400" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-medium">Bike Unlocked!</h3>
+                  <p className="text-sm text-muted-foreground mt-1">Ride ID: {scannedResult}</p>
+                </div>
+                <Alert className="bg-primary/10 border-primary/20 text-primary">
+                  <Info className="h-4 w-4" />
+                  <AlertTitle>Ride Started</AlertTitle>
+                  <AlertDescription>
+                    Your ride has been started. Remember to park the bike at a designated station when you're done.
+                  </AlertDescription>
+                </Alert>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                <div className="relative w-full h-64 bg-muted rounded-md overflow-hidden">
+                  <video ref={videoRef} className="w-full h-full object-cover" autoPlay playsInline></video>
+                  <canvas ref={canvasRef} className="hidden"></canvas>
+                  <div className="absolute inset-0 border-2 border-dashed border-primary/50 m-8 rounded-md pointer-events-none"></div>
+                </div>
+                <p className="text-sm text-muted-foreground text-center">
+                  {scanning ? "Scanning for QR code..." : "Camera initializing..."}
+                </p>
+              </div>
+            )}
+          </div>
+          <DialogFooter>
+            {scannedResult ? (
+              <Button onClick={() => setIsQrScannerOpen(false)}>Close</Button>
+            ) : (
+              <>
+                <Button variant="outline" onClick={() => setIsQrScannerOpen(false)}>
+                  Cancel
+                </Button>
+                <Button
+                  variant={scanning ? "destructive" : "default"}
+                  onClick={() => {
+                    if (scanning) {
+                      stopScanner()
+                    } else {
+                      startScanner()
+                    }
+                  }}
+                >
+                  {scanning ? "Stop Scanner" : "Restart Scanner"}
+                </Button>
+              </>
+            )}
           </DialogFooter>
         </DialogContent>
       </Dialog>
