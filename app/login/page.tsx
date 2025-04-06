@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -13,14 +13,10 @@ import { toast } from "@/hooks/use-toast"
 import { Bike, Eye, EyeOff } from "lucide-react"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+// Add these imports at the top with the other imports
+import { Camera, Upload, X } from "lucide-react"
 
 export default function LoginPage() {
-      const logostyle = {
-    "height":"60px",
-    "width":"60px",
-    "borderRadius": "100%",
-    // "backgroundSize": "cover",
-  }
   const [isLoading, setIsLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
 
@@ -42,6 +38,11 @@ export default function LoginPage() {
   const [acceptedTerms, setAcceptedTerms] = useState(false)
   const [termsDialogOpen, setTermsDialogOpen] = useState(false)
   const [privacyDialogOpen, setPrivacyDialogOpen] = useState(false)
+  // Add these state variables inside the LoginPage component, with the other state variables
+  const [studentIdImage, setStudentIdImage] = useState<string | null>(null)
+  const [ghanaCardImage, setGhanaCardImage] = useState<string | null>(null)
+  const [isCapturingStudentId, setIsCapturingStudentId] = useState(false)
+  const [isCapturingGhanaCard, setIsCapturingGhanaCard] = useState(false)
 
   const handleLoginChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -67,6 +68,116 @@ export default function LoginPage() {
     }, 1500)
   }
 
+  // Add these functions inside the LoginPage component, before the return statement
+  const handleFileChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    setImage: React.Dispatch<React.SetStateAction<string | null>>,
+  ) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      const reader = new FileReader()
+      reader.onload = (event) => {
+        setImage(event.target?.result as string)
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
+  const captureImage = (
+    setImage: React.Dispatch<React.SetStateAction<string | null>>,
+    setIsCapturing: React.Dispatch<React.SetStateAction<boolean>>,
+  ) => {
+    setIsCapturing(true)
+  }
+
+  const handleCaptureStudentId = () => {
+    const video = document.getElementById("student-id-video") as HTMLVideoElement
+    const canvas = document.createElement("canvas")
+    canvas.width = video.videoWidth
+    canvas.height = video.videoHeight
+    canvas.getContext("2d")?.drawImage(video, 0, 0, canvas.width, canvas.height)
+    const imageDataUrl = canvas.toDataURL("image/png")
+    setStudentIdImage(imageDataUrl)
+    setIsCapturingStudentId(false)
+
+    // Stop all video streams
+    video.srcObject?.getTracks().forEach((track) => track.stop())
+  }
+
+  const handleCaptureGhanaCard = () => {
+    const video = document.getElementById("ghana-card-video") as HTMLVideoElement
+    const canvas = document.createElement("canvas")
+    canvas.width = video.videoWidth
+    canvas.height = video.videoHeight
+    canvas.getContext("2d")?.drawImage(video, 0, 0, canvas.width, canvas.height)
+    const imageDataUrl = canvas.toDataURL("image/png")
+    setGhanaCardImage(imageDataUrl)
+    setIsCapturingGhanaCard(false)
+
+    // Stop all video streams
+    video.srcObject?.getTracks().forEach((track) => track.stop())
+  }
+
+  // Add this effect to handle camera access
+  useEffect(() => {
+    if (isCapturingStudentId) {
+      const startVideo = async () => {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ video: true })
+          const video = document.getElementById("student-id-video") as HTMLVideoElement
+          if (video) {
+            video.srcObject = stream
+          }
+        } catch (err) {
+          console.error("Error accessing camera:", err)
+          setIsCapturingStudentId(false)
+          toast({
+            title: "Camera Error",
+            description: "Could not access your camera. Please check permissions.",
+            variant: "destructive",
+          })
+        }
+      }
+      startVideo()
+    }
+
+    if (isCapturingGhanaCard) {
+      const startVideo = async () => {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ video: true })
+          const video = document.getElementById("ghana-card-video") as HTMLVideoElement
+          if (video) {
+            video.srcObject = stream
+          }
+        } catch (err) {
+          console.error("Error accessing camera:", err)
+          setIsCapturingGhanaCard(false)
+          toast({
+            title: "Camera Error",
+            description: "Could not access your camera. Please check permissions.",
+            variant: "destructive",
+          })
+        }
+      }
+      startVideo()
+    }
+
+    // Cleanup function to stop all video streams when component unmounts
+    return () => {
+      const studentIdVideo = document.getElementById("student-id-video") as HTMLVideoElement
+      const ghanaCardVideo = document.getElementById("ghana-card-video") as HTMLVideoElement
+
+      if (studentIdVideo && studentIdVideo.srcObject) {
+        studentIdVideo.srcObject.getTracks().forEach((track) => track.stop())
+      }
+
+      if (ghanaCardVideo && ghanaCardVideo.srcObject) {
+        ghanaCardVideo.srcObject.getTracks().forEach((track) => track.stop())
+      }
+    }
+  }, [isCapturingStudentId, isCapturingGhanaCard])
+
+  // Update the handleSignupSubmit function to check for ID images
   const handleSignupSubmit = (e: React.FormEvent) => {
     e.preventDefault()
 
@@ -74,6 +185,15 @@ export default function LoginPage() {
       toast({
         title: "Passwords don't match",
         description: "Please make sure your passwords match.",
+        variant: "destructive",
+      })
+      return
+    }
+
+    if (!studentIdImage || !ghanaCardImage) {
+      toast({
+        title: "ID Images Required",
+        description: "Please upload or capture images of both your Student ID and Ghana Card.",
         variant: "destructive",
       })
       return
@@ -96,8 +216,7 @@ export default function LoginPage() {
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1 flex flex-col items-center">
           <div className="flex items-center justify-center p-2 bg-muted rounded-full mb-2">
-            {/* <Bike className="h-6 w-6 text-primary" /> */}
-            <img style={logostyle} src="LOGO.png" alt="" />
+            <Bike className="h-6 w-6 text-primary" />
           </div>
           <CardTitle className="text-2xl font-bold text-center">Welcome to Zyro Bike</CardTitle>
           <CardDescription className="text-center">Sign in to your account or create a new one</CardDescription>
@@ -215,7 +334,7 @@ export default function LoginPage() {
                     required
                   />
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="signup-student-id">Student ID</Label>
                     <Input
@@ -227,6 +346,85 @@ export default function LoginPage() {
                       required
                     />
                   </div>
+
+                  <div className="space-y-2">
+                    <Label>Student ID Image</Label>
+                    <div className="border rounded-md p-4">
+                      {studentIdImage ? (
+                        <div className="relative">
+                          <img
+                            src={studentIdImage || "/placeholder.svg"}
+                            alt="Student ID"
+                            className="w-full h-auto max-h-40 object-contain mx-auto rounded-md"
+                          />
+                          <Button
+                            type="button"
+                            variant="destructive"
+                            size="icon"
+                            className="absolute top-2 right-2 h-8 w-8"
+                            onClick={() => setStudentIdImage(null)}
+                          >
+                            <X className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      ) : (
+                        <div className="flex flex-col space-y-3">
+                          {isCapturingStudentId ? (
+                            <div className="space-y-3">
+                              <div className="relative w-full h-48 bg-muted rounded-md overflow-hidden">
+                                <video
+                                  id="student-id-video"
+                                  autoPlay
+                                  playsInline
+                                  className="w-full h-full object-cover"
+                                ></video>
+                              </div>
+                              <div className="flex justify-between">
+                                <Button type="button" variant="outline" onClick={() => setIsCapturingStudentId(false)}>
+                                  Cancel
+                                </Button>
+                                <Button type="button" onClick={handleCaptureStudentId}>
+                                  Capture
+                                </Button>
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="flex flex-col sm:flex-row gap-2">
+                              <div className="flex-1">
+                                <label htmlFor="student-id-upload" className="w-full">
+                                  <div className="flex items-center justify-center w-full h-24 border-2 border-dashed rounded-md cursor-pointer hover:bg-muted/50">
+                                    <div className="flex flex-col items-center">
+                                      <Upload className="h-6 w-6 text-muted-foreground mb-1" />
+                                      <span className="text-sm text-muted-foreground">Upload Image</span>
+                                    </div>
+                                  </div>
+                                  <input
+                                    id="student-id-upload"
+                                    type="file"
+                                    accept="image/*"
+                                    className="hidden"
+                                    onChange={(e) => handleFileChange(e, setStudentIdImage)}
+                                  />
+                                </label>
+                              </div>
+                              <div className="flex-1">
+                                <Button
+                                  type="button"
+                                  variant="outline"
+                                  className="w-full h-24 flex flex-col items-center justify-center"
+                                  onClick={() => captureImage(setStudentIdImage, setIsCapturingStudentId)}
+                                >
+                                  <Camera className="h-6 w-6 text-muted-foreground mb-1" />
+                                  <span className="text-sm text-muted-foreground">Take Photo</span>
+                                </Button>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
                   <div className="space-y-2">
                     <Label htmlFor="signup-ghana-card">Ghana Card ID</Label>
                     <Input
@@ -237,6 +435,84 @@ export default function LoginPage() {
                       onChange={handleSignupChange}
                       required
                     />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>Ghana Card Image</Label>
+                    <div className="border rounded-md p-4">
+                      {ghanaCardImage ? (
+                        <div className="relative">
+                          <img
+                            src={ghanaCardImage || "/placeholder.svg"}
+                            alt="Ghana Card"
+                            className="w-full h-auto max-h-40 object-contain mx-auto rounded-md"
+                          />
+                          <Button
+                            type="button"
+                            variant="destructive"
+                            size="icon"
+                            className="absolute top-2 right-2 h-8 w-8"
+                            onClick={() => setGhanaCardImage(null)}
+                          >
+                            <X className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      ) : (
+                        <div className="flex flex-col space-y-3">
+                          {isCapturingGhanaCard ? (
+                            <div className="space-y-3">
+                              <div className="relative w-full h-48 bg-muted rounded-md overflow-hidden">
+                                <video
+                                  id="ghana-card-video"
+                                  autoPlay
+                                  playsInline
+                                  className="w-full h-full object-cover"
+                                ></video>
+                              </div>
+                              <div className="flex justify-between">
+                                <Button type="button" variant="outline" onClick={() => setIsCapturingGhanaCard(false)}>
+                                  Cancel
+                                </Button>
+                                <Button type="button" onClick={handleCaptureGhanaCard}>
+                                  Capture
+                                </Button>
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="flex flex-col sm:flex-row gap-2">
+                              <div className="flex-1">
+                                <label htmlFor="ghana-card-upload" className="w-full">
+                                  <div className="flex items-center justify-center w-full h-24 border-2 border-dashed rounded-md cursor-pointer hover:bg-muted/50">
+                                    <div className="flex flex-col items-center">
+                                      <Upload className="h-6 w-6 text-muted-foreground mb-1" />
+                                      <span className="text-sm text-muted-foreground">Upload Image</span>
+                                    </div>
+                                  </div>
+                                  <input
+                                    id="ghana-card-upload"
+                                    type="file"
+                                    accept="image/*"
+                                    className="hidden"
+                                    onChange={(e) => handleFileChange(e, setGhanaCardImage)}
+                                  />
+                                </label>
+                              </div>
+                              <div className="flex-1">
+                                <Button
+                                  type="button"
+                                  variant="outline"
+                                  className="w-full h-24 flex flex-col items-center justify-center"
+                                  onClick={() => captureImage(setGhanaCardImage, setIsCapturingGhanaCard)}
+                                >
+                                  <Camera className="h-6 w-6 text-muted-foreground mb-1" />
+                                  <span className="text-sm text-muted-foreground">Take Photo</span>
+                                </Button>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
                 <div className="space-y-2">
@@ -478,7 +754,7 @@ export default function LoginPage() {
 
             <div className="pt-4 border-t">
               <p>For any questions, contact us at info@zyrobike.com</p>
-              <p className="font-medium mt-2">Zyro Bike • www.zyrobike.vercel.app • +233 550 7475 66</p>
+              <p className="font-medium mt-2">Zyro Bike • www.zyrobike.com • +233 123 456 789</p>
             </div>
           </div>
           <DialogFooter>
