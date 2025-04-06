@@ -41,8 +41,8 @@ import {
 export default function ProfilePage() {
   // Mock user data - in a real app, this would come from an API or context
   const [userData, setUserData] = useState({
-    name: "Kofi Mensah",
-    email: "kofi.mensah@example.com",
+    name: "Ama Mensah",
+    email: "ama.mensah@example.com",
     studentId: "10123456",
     ghanaCard: "GHA-123456789",
     joinedDate: "March 15, 2023",
@@ -264,7 +264,10 @@ export default function ProfilePage() {
               <CardContent className="p-6">
                 <div className="flex flex-col items-center space-y-4">
                   <div className="relative w-24 h-24 rounded-full bg-muted flex items-center justify-center">
-                    <User className="h-12 w-12 text-muted-foreground" />
+                    {/* <User className="h-12 w-12 text-muted-foreground" /> */}
+                    <img src="profile.jpg" alt="profile pic"
+                    style={{ borderRadius: "50%", width: "100%", height: "100%", backgroundPosition: "center", backgroundSize: "center" }}
+                    />
                   </div>
                   <div className="space-y-1 text-center">
                     <h2 className="text-xl font-semibold">{userData.name}</h2>

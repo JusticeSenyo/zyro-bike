@@ -5,20 +5,29 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { ModeToggle } from "@/components/mode-toggle"
-import { Menu, X, Bike } from "lucide-react"
+import { Menu, X, Bike, User } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useMobile } from "@/hooks/use-mobile"
 
 const routes = [
   { href: "/", label: "Home" },
   { href: "/services", label: "Services" },
+  { href: "/our-fleet", label: "Our Bikes" },
+  { href: "/how-it-works", label: "How It Works" },
   { href: "/contact", label: "Contact" },
   { href: "/feedback", label: "Feedback" },
   { href: "/about", label: "About" },
 ]
 
 export default function Navbar() {
-  const logoStyle = {
+  const pathname = usePathname()
+  const isMobile = useMobile()
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+
+  // Mock authentication state - in a real app, this would come from an auth context
+  const [isLoggedIn, setIsLoggedIn] = useState(true)
+
+    const logostyle = {
     "height":"60px",
     "width":"60px",
     "padding": "none",
@@ -26,9 +35,6 @@ export default function Navbar() {
     "borderRadius": "100%",
     "backgroundSize": "cover",
   }
-  const pathname = usePathname()
-  const isMobile = useMobile()
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   // Close mobile menu when route changes
   useEffect(() => {
@@ -47,7 +53,7 @@ export default function Navbar() {
       <div className="container flex h-16 items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
           {/* <Bike className="h-6 w-6 text-primary" /> */}
-          <img style={logoStyle} src="LOGO.png" alt="logo" />
+          <img style={logostyle} src="LOGO.png" alt="" />
           <span className="text-xl font-bold">Zyro Bike</span>
         </Link>
 
@@ -69,14 +75,25 @@ export default function Navbar() {
 
         <div className="hidden md:flex items-center gap-4">
           <ModeToggle />
-          <Link href="/login">
-            <Button variant="outline" size="sm">
-              Login
-            </Button>
-          </Link>
-          <Link href="/signup">
-            <Button size="sm">Sign Up & Ride</Button>
-          </Link>
+          {isLoggedIn ? (
+            <Link href="/profile">
+              <Button variant="outline" size="sm" className="gap-2">
+                <User className="h-4 w-4" />
+                Profile
+              </Button>
+            </Link>
+          ) : (
+            <>
+              <Link href="/login">
+                <Button variant="outline" size="sm">
+                  Login
+                </Button>
+              </Link>
+              <Link href="/signup">
+                <Button size="sm">Sign Up & Ride</Button>
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Mobile Navigation */}
@@ -105,14 +122,25 @@ export default function Navbar() {
               </Link>
             ))}
             <div className="flex flex-col gap-2 mt-2 pt-2 border-t">
-              <Link href="/login">
-                <Button variant="outline" className="w-full">
-                  Login
-                </Button>
-              </Link>
-              <Link href="/signup">
-                <Button className="w-full">Sign Up & Ride</Button>
-              </Link>
+              {isLoggedIn ? (
+                <Link href="/profile">
+                  <Button className="w-full gap-2">
+                    <User className="h-4 w-4" />
+                    Profile
+                  </Button>
+                </Link>
+              ) : (
+                <>
+                  <Link href="/login">
+                    <Button variant="outline" className="w-full">
+                      Login
+                    </Button>
+                  </Link>
+                  <Link href="/signup">
+                    <Button className="w-full">Sign Up & Ride</Button>
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>

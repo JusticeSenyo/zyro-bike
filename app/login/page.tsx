@@ -210,13 +210,22 @@ export default function LoginPage() {
       setIsLoading(false)
     }, 1500)
   }
+      const logostyle = {
+    "height":"60px",
+    "width":"60px",
+    "padding": "none",
+    "margin": "0",
+    "borderRadius": "100%",
+    "backgroundSize": "cover",
+  }
 
   return (
     <div className="container flex items-center justify-center min-h-[80vh] py-8">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1 flex flex-col items-center">
           <div className="flex items-center justify-center p-2 bg-muted rounded-full mb-2">
-            <Bike className="h-6 w-6 text-primary" />
+            {/* <Bike className="h-6 w-6 text-primary" /> */}
+            <img style={logostyle} src="LOGO.png" alt="" />
           </div>
           <CardTitle className="text-2xl font-bold text-center">Welcome to Zyro Bike</CardTitle>
           <CardDescription className="text-center">Sign in to your account or create a new one</CardDescription>
