@@ -228,8 +228,7 @@ export default function HowItWorksPage() {
             <div className="grid gap-6 lg:grid-cols-2 lg:gap-12 items-center">
               <div className="order-2 lg:order-1 relative aspect-video overflow-hidden rounded-xl">
                 <Image
-                  src="/placeholder.svg?height=400&width=600"
-                  alt="Returning Bike to Station"
+                  src="lastimage.png"
                   width={600}
                   height={400}
                   className="object-cover w-full h-full"

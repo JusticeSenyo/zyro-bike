@@ -286,7 +286,7 @@ export default function OurFleetPage() {
 
           <div className="relative aspect-[16/9] w-full overflow-hidden rounded-xl border">
             <Image
-              src="/placeholder.svg?height=600&width=1200"
+              src="docking bikes.png"
               alt="Campus Bike Station Map"
               width={1200}
               height={600}
